@@ -1,0 +1,19 @@
+name: Package
+
+on: [push]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+      - uses: astral-sh/setup-uv@v8
+      - run: uv run tools/package.py
+      - run: unzip via-tools.zip -d package
+      - uses: actions/upload-artifact@v7
+        with:
+          name: via-tools
+          path: package/

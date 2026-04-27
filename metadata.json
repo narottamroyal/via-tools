@@ -1,0 +1,26 @@
+{
+  "$schema": "https://go.kicad.org/pcm/schemas/v2",
+  "name": "Via Tools",
+  "description": "Generate via stitching patterns within copper zones and pads",
+  "description_full": "Generate via stitching patterns within copper zones and pads. Stitching settings are saved for each zone and pad, making it easy to update existing via stitching areas.",
+  "identifier": "com.github.narottamroyal.via-tools",
+  "type": "plugin",
+  "author": {
+    "name": "Narottam Royal",
+    "contact": {
+      "github": "https://github.com/narottamroyal"
+    }
+  },
+  "license": "MIT",
+  "resources": {
+    "homepage": "https://github.com/narottamroyal/via-tools"
+  },
+  "versions": [
+    {
+      "version": "0.1.0",
+      "status": "development",
+      "kicad_version": "10.0",
+      "runtime": "ipc"
+    }
+  ]
+}

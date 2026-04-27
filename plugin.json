@@ -1,0 +1,21 @@
+{
+  "$schema": "https://go.kicad.org/api/schemas/v1",
+  "identifier": "com.github.narottamroyal.via-tools",
+  "name": "Via Tools",
+  "description": "Generate via stitching patterns within copper zones and pads",
+  "runtime": {
+    "type": "python",
+    "min_version": "3.10"
+  },
+  "actions": [
+    {
+      "identifier": "via-tools",
+      "name": "Via Tools",
+      "description": "Generate or update via stitching for the selected copper zone or pad",
+      "show-button": true,
+      "scopes": ["pcb"],
+      "entrypoint": "via_tools.py",
+      "icons-light": ["icon.png"]
+    }
+  ]
+}
