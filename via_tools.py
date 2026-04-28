@@ -207,9 +207,7 @@ class ViaTools:
 
     def _load_plugin_config(self) -> None:
         path = Path(self.kicad.get_plugin_settings_path("a.a.a"))
-        self.plugin_config_path = path.with_name(
-            "com.github.narottamroyal.via-stitching"
-        )
+        self.plugin_config_path = path.with_name("com.github.narottamroyal.via-tools")
         if self.plugin_config_path.exists():
             self.plugin_config = Config.from_json(self.plugin_config_path.read_text())
 
@@ -218,7 +216,7 @@ class ViaTools:
 
     def _load_project_config(self) -> None:
         path = Path(self.board.get_project().path)
-        self.project_config_path = path / ".via-stitching.json"
+        self.project_config_path = path / ".via-tools.json"
         if self.project_config_path.exists():
             self.project_config = ProjectConfig.from_json(
                 self.project_config_path.read_text()
