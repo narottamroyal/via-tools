@@ -15,6 +15,7 @@
   "resources": {
     "homepage": "https://github.com/narottamroyal/via-tools"
   },
+  "tags": ["grid", "pattern", "rf", "stitching", "via", "zone"],
   "versions": [
     {
       "version": "0.1.0",
