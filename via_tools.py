@@ -498,6 +498,14 @@ class GUI:
         except ValueError as error:
             self.error_message = str(error)
 
+    def setup_viewport(self):
+        dpg.show_viewport()
+        # The usable client viewport is smaller than the specified viewport on Windows
+        # Calculate the width and height required to make the client viewport the desired size
+        width = dpg.get_viewport_width() * 2 - dpg.get_viewport_client_width()
+        height = dpg.get_viewport_height() * 2 - dpg.get_viewport_client_height()
+        dpg.configure_viewport(0, width=width, height=height)
+
     @contextmanager
     def ui_loading_state(self):
         try:
@@ -718,7 +726,7 @@ class GUI:
                             self.update_preview()
 
         dpg.setup_dearpygui()
-        dpg.show_viewport()
+        self.setup_viewport()
         dpg.set_primary_window("Main Window", True)
         dpg.start_dearpygui()
         dpg.destroy_context()
