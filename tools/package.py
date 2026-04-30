@@ -1,11 +1,3 @@
-# /// script
-# requires-python = ">=3.14"
-# dependencies = [
-#     "cairosvg>=2.9.0",
-#     "pillow>=12.2.0",
-# ]
-# ///
-
 from contextlib import contextmanager
 from pathlib import Path
 from shutil import make_archive, copy2, rmtree

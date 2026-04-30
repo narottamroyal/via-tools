@@ -1,11 +1,15 @@
 [project]
+name = "via-tools"
+readme = "README.md"
+requires-python = ">=3.10"
+version = "0.1.0"
+
 dependencies = [
     "dearpygui>=2.3",
     "kicad-python>=0.7.1",
     "mashumaro>=3.20",
     "shapely>=2.1.2",
 ]
-name = "via-tools"
-readme = "README.md"
-requires-python = ">=3.10"
-version = "0.1.0"
+
+[dependency-groups]
+dev = ["cairosvg>=2.9.0", "pillow>=12.2.0"]

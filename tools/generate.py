@@ -29,7 +29,7 @@ def icon(output: Path, size: int | None = None):
 
 def requirements(output: Path):
     result = subprocess.run(
-        ["uv", "export", "--format", "requirements.txt"],
+        ["uv", "export", "--no-dev", "--format", "requirements.txt"],
         check=True,
         capture_output=True,
         text=True,
