@@ -11,6 +11,9 @@ jobs:
         with:
           python-version-file: ".python-version"
       - uses: astral-sh/setup-uv@v8.1.0
+      - run: uv sync --locked
+      - run: uv run ruff format --check
+      - run: uv run ruff check --output-format=github
       - run: uv run tools/package.py
       - run: unzip via-tools.zip -d package
       - uses: actions/upload-artifact@v7
