@@ -1,4 +1,5 @@
 # Via Tools
+[![Package](https://github.com/narottamroyal/via-tools/actions/workflows/package.yml/badge.svg)](https://github.com/narottamroyal/via-tools/actions/workflows/package.yml)
 
 Automatically generate and manage via stitching patterns within copper zones and pads. This plugin stores stitching parameters for each zone and pad, allowing you to seamlessly update and regenerate stitched areas as your board layout evolves.
 
