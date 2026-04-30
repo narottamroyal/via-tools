@@ -499,6 +499,8 @@ class GUI:
             self.error_message = str(error)
 
     def setup_viewport(self):
+        dpg.set_viewport_small_icon("icon.ico")
+        dpg.set_viewport_large_icon("icon.ico")
         dpg.show_viewport()
         # The usable client viewport is smaller than the specified viewport on Windows
         # Calculate the width and height required to make the client viewport the desired size

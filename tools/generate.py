@@ -1,16 +1,30 @@
 import subprocess
 
-from cairosvg import svg2png
+from io import BytesIO
 from pathlib import Path
 
+from cairosvg import svg2png
+from PIL import Image
 
-def icon(output: Path, size: int):
-    svg2png(
+
+def icon(output: Path, size: int | None = None):
+    if size is None:
+        size = 256
+    png = svg2png(
         url="resources/icon.svg",
-        write_to=str(output),
         output_width=size,
         output_height=size,
     )
+    match output.suffix.lower():
+        case ".ico":
+            img = Image.open(BytesIO(png))
+            img.save(
+                output, format="ICO", sizes=[(16, 16), (32, 32), (48, 48), (256, 256)]
+            )
+        case ".png":
+            output.write_bytes(png)
+        case str(suffix):
+            raise ValueError(f"Unsupported file type: {suffix}")
 
 
 def requirements(output: Path):

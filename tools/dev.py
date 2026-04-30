@@ -2,6 +2,7 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "cairosvg>=2.9.0",
+#     "pillow>=12.2.0",
 # ]
 # ///
 
@@ -11,6 +12,7 @@ from pathlib import Path
 
 
 def main():
+    icon(Path("icon.ico"))
     icon(Path("icon.png"), 24)
     requirements(Path("requirements.txt"))
 

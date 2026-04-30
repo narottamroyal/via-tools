@@ -2,6 +2,7 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "cairosvg>=2.9.0",
+#     "pillow>=12.2.0",
 # ]
 # ///
 
@@ -33,6 +34,7 @@ def main():
         plugin_files = ["plugin.json", "via_tools.py"]
         for file in plugin_files:
             copy2(file, plugins / file)
+        icon(plugins / "icon.ico")
         icon(plugins / "icon.png", 24)
         requirements(plugins / "requirements.txt")
 
