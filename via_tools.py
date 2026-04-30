@@ -194,7 +194,7 @@ class ViaTools:
 
     @property
     def active_via_settings(self) -> ViaSettings:
-        """Returns the user-overriden via settings, or defaults to the netclass settings."""
+        """Returns the user-overridden via settings, or defaults to the netclass settings."""
         return self.config.via_settings or self.netclass_via_settings()
 
     def initialize(self) -> None:
