@@ -335,17 +335,30 @@ class ViaTools:
         ]
         return shapely.union_all(
             [
-                Polygon([(n.point.x, n.point.y) for n in p.outline.nodes]).buffer(
-                    self.netclass.clearance
-                )
-                for p in self.board.get_pad_shapes_as_polygons(pads)
-                if p is not None
+                Polygon(
+                    [(node.point.x, node.point.y) for node in polygon.outline.nodes]
+                ).buffer(self.netclass.clearance)
+                for polygon in self.board.get_pad_shapes_as_polygons(pads)
+                if polygon is not None
+            ]
+        )
+
+    def _get_keepout_obstacles(self) -> shapely.Geometry:
+        keepout_nodes = [
+            zone.outline.outline.nodes
+            for zone in self.board.get_zones()
+            if zone.is_rule_area and zone._proto.rule_area_settings.keepout_vias
+        ]
+        return shapely.union_all(
+            [
+                Polygon([(node.point.x, node.point.y) for node in nodes])
+                for nodes in keepout_nodes
             ]
         )
 
     def _get_track_obstacles(self) -> shapely.Geometry:
         tracks = self.board.get_tracks()
-        netclasses = self.board.get_netclass_for_nets([t.net for t in tracks])
+        netclasses = self.board.get_netclass_for_nets([track.net for track in tracks])
         return shapely.union_all([track_to_geo(track, netclasses) for track in tracks])
 
     def _get_via_obstacles(self) -> shapely.Geometry:
@@ -371,9 +384,12 @@ class ViaTools:
                         shapely.union_all(
                             [
                                 Polygon(
-                                    [(n.point.x, n.point.y) for n in poly.outline.nodes]
+                                    [
+                                        (node.point.x, node.point.y)
+                                        for node in polygon.outline.nodes
+                                    ]
                                 )
-                                for poly in polygons
+                                for polygon in polygons
                             ]
                         )
                         for polygons in self.stitching_item.filled_polygons.values()
@@ -382,7 +398,7 @@ class ViaTools:
             case Pad():
                 polygon = self.board.get_pad_shapes_as_polygons(self.stitching_item)
                 return Polygon(
-                    [(n.point.x, n.point.y) for n in polygon.outline.nodes]
+                    [(node.point.x, node.point.y) for node in polygon.outline.nodes]
                 ).buffer(self.netclass.clearance)
             case _:
                 return Polygon()
@@ -393,6 +409,7 @@ class ViaTools:
         obstacles = shapely.union_all(
             [
                 self._get_pad_obstacles(),
+                self._get_keepout_obstacles(),
                 self._get_track_obstacles(),
                 self._get_via_obstacles(),
             ]

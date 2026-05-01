@@ -14,7 +14,3 @@ Automatically generate and manage via stitching patterns within copper zones and
 - Open KiCad's Plugin and Content Manager
 - Click `Install from File...` and select `via-tools.zip` to install the plugin
 - A dialog box may appear asking if you would like to enable the KiCad API. Select `Yes` to enable the KiCad API
-
-## Known Issues
-
-- Rule areas with `Keep Out Vias` are not respected
