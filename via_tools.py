@@ -350,7 +350,7 @@ class ViaTools:
 
     def _get_via_obstacles(self) -> shapely.Geometry:
         existing_via_ids = (
-            {id.value for id in self.group._item_ids} if self.group else set()
+            {item.id.value for item in self.group.items} if self.group else set()
         )
         return shapely.union_all(
             [
@@ -425,7 +425,7 @@ class ViaTools:
         commit = self.board.begin_commit()
 
         if self.group:
-            self.board.remove_items_by_id(self.group._item_ids)
+            self.board.remove_items(self.group.items)
             self.board.remove_items(self.group)
 
         settings = self.active_via_settings
@@ -477,6 +477,10 @@ class ViaTools:
 
         self.board.clear_selection()
         self.board.add_to_selection(group)
+
+        # Bug fix: Groups returned by create_items do not contain unwrapped items
+        group._unwrapped_items = self.board.get_items_by_id(group._item_ids)
+
         return group
 
     def run(self) -> None:
