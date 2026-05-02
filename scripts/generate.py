@@ -37,7 +37,14 @@ def metadata(output: Path):
 
 def requirements(output: Path):
     result = subprocess.run(
-        ["uv", "export", "--no-dev", "--no-emit-project", "--format", "requirements.txt"],
+        [
+            "uv",
+            "export",
+            "--no-dev",
+            "--no-emit-project",
+            "--format",
+            "requirements.txt",
+        ],
         check=True,
         capture_output=True,
         text=True,
