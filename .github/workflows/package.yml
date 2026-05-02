@@ -15,7 +15,7 @@ jobs:
       - run: uv run typos
       - run: uv run ruff format --check
       - run: uv run ruff check --output-format=github
-      - run: uv run tools/package.py
+      - run: uv run scripts/package.py
       - run: unzip via-tools.zip -d package
       - uses: actions/upload-artifact@v7
         with:

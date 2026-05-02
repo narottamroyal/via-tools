@@ -14,7 +14,7 @@
       "description": "Generate or update via stitching for the selected copper zone or pad",
       "show-button": true,
       "scopes": ["pcb"],
-      "entrypoint": "via_tools.py",
+      "entrypoint": "via_tools/plugin.py",
       "icons-light": ["icon.png"]
     }
   ]

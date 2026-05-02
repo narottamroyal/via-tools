@@ -18,3 +18,10 @@ dev = [
     "ruff>=0.15.12",
     "typos>=1.45.2",
 ]
+
+[project.scripts]
+via-tools = "via_tools:main"
+
+[build-system]
+requires = ["uv_build>=0.11.8,<0.12.0"]
+build-backend = "uv_build"

@@ -1,5 +1,7 @@
+import json
 import subprocess
 
+from importlib.metadata import version
 from io import BytesIO
 from pathlib import Path
 
@@ -25,6 +27,12 @@ def icon(output: Path, size: int | None = None):
             output.write_bytes(png)
         case str(suffix):
             raise ValueError(f"Unsupported file type: {suffix}")
+
+
+def metadata(output: Path):
+    data = json.loads(Path("resources/metadata.json").read_text())
+    data["versions"][0]["version"] = version("via-tools")
+    output.write_text(json.dumps(data, indent=2))
 
 
 def requirements(output: Path):
