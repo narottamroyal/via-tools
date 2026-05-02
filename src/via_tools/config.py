@@ -1,10 +1,14 @@
 from dataclasses import dataclass, field
 from enum import Enum
+from importlib.metadata import version
 
 from mashumaro.mixins.json import DataClassJSONMixin
 
 
-__version__ = "0.1.0"
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = version("via-tools")
 
 
 class Pattern(Enum):

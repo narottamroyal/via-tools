@@ -1,7 +1,7 @@
 import json
 import subprocess
 
-from importlib.metadata import version
+from importlib.metadata import version as metadata_version
 from io import BytesIO
 from pathlib import Path
 
@@ -31,7 +31,7 @@ def icon(output: Path, size: int | None = None):
 
 def metadata(output: Path):
     data = json.loads(Path("resources/metadata.json").read_text())
-    data["versions"][0]["version"] = version("via-tools")
+    data["versions"][0]["version"] = metadata_version("via-tools")
     output.write_text(json.dumps(data, indent=2))
 
 
@@ -50,3 +50,7 @@ def requirements(output: Path):
         text=True,
     )
     output.write_text(result.stdout)
+
+
+def version(output: Path):
+    output.write_text(f'__version__ = "{metadata_version("via-tools")}"\n')

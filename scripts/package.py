@@ -5,7 +5,7 @@ from shutil import make_archive, copy2, rmtree
 
 from kipy.packaging.validate import validate
 
-from generate import icon, metadata, requirements
+from generate import icon, metadata, requirements, version
 
 
 def validate_plugin(path: Path):
@@ -58,6 +58,7 @@ def generate(path: Path, zip: bool):
                 dest = plugins / path.relative_to("src")
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 copy2(path, dest)
+        version(plugins / "via_tools/_version.py")
 
         resources = root / "resources"
         resources.mkdir()
