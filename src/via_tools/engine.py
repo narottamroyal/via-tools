@@ -158,9 +158,8 @@ class ViaTools:
         path = Path(self.board.get_project().path)
         self.project_config_path = path / ".via-tools.json"
         if self.project_config_path.exists():
-            self.project_config = ProjectConfig.from_json(
-                self.project_config_path.read_text()
-            )
+            config = ProjectConfig.from_json(self.project_config_path.read_text())
+            self.project_config.config_history = config.config_history
 
     def save_project_config(self) -> None:
         group_config = GroupConfig(deepcopy(self.config), self.group.id.value)
