@@ -74,7 +74,10 @@ class ConfigManager:
     def __init__(self, plugin_path: Path, project_path: Path):
         # Initialize plugin config
         self.plugin_config = Config()
-        self.plugin_file = plugin_path
+        self.plugin_file = plugin_path / "config.json"
+        if plugin_path.is_file():
+            plugin_path.unlink()
+        plugin_path.mkdir(exist_ok=True)
         if self.plugin_file.is_file():
             self.plugin_config = Config.from_json(self.plugin_file.read_text())
 
