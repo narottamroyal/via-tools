@@ -50,4 +50,4 @@ This packaging script:
 - Uses the version specified in `pyproject.toml` to:
     - Generate a `_version.py` file
     - Update the `metadata.json` version
-- Creates a `via-tools.zip` file with the required plugin folder structure
+- Creates a `via-tools.zip` file with the required [plugin archive structure](https://dev-docs.kicad.org/en/addons/index.html#_python_plugins)
