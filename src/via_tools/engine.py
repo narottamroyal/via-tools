@@ -1,10 +1,7 @@
-import json
 import math
 import shapely
 
-from copy import deepcopy
 from pathlib import Path
-
 from kipy import KiCad
 from kipy.board_types import ArcTrack, Group, Pad, Track, Via, Zone
 from kipy.geometry import Box2, Vector2, normalize_angle_pi_radians
@@ -13,7 +10,12 @@ from kipy.proto.common.types.base_types_pb2 import KIID
 from kipy.util import units
 from shapely.geometry import LineString, Point, Polygon
 
-from .config import Config, GroupConfig, Pattern, ProjectConfig, ViaSettings
+from .config import (
+    Config,
+    ConfigManager,
+    Pattern,
+    ViaSettings,
+)
 
 
 def arc_angle(track: ArcTrack) -> float | None:
@@ -122,8 +124,13 @@ class ViaTools:
     def __init__(self) -> None:
         self.kicad = KiCad()
         self.board = self.kicad.get_board()
-        self.plugin_config = Config()
-        self.project_config = ProjectConfig()
+
+        self.config_manager = ConfigManager(
+            plugin_path=Path(self.kicad.get_plugin_settings_path("a.a.a")).with_name(
+                "com.github.narottamroyal.via-tools"
+            ),
+            project_path=Path(self.board.get_project().path),
+        )
 
         # Populated by initialize()
         self.stitching_item: Pad | Zone | None = None
@@ -138,39 +145,14 @@ class ViaTools:
         return self.config.via_settings or self.netclass_via_settings()
 
     def initialize(self) -> None:
-        self._load_plugin_config()
-        self._load_project_config()
-        self._load_zone()
-        self._load_netclass(self.stitching_item)
-        self._load_existing_group()
-        self._load_config()
-
-    def _load_plugin_config(self) -> None:
-        path = Path(self.kicad.get_plugin_settings_path("a.a.a"))
-        self.plugin_config_path = path.with_name("com.github.narottamroyal.via-tools")
-        if self.plugin_config_path.exists():
-            self.plugin_config = Config.from_json(self.plugin_config_path.read_text())
-
-    def save_plugin_config(self) -> None:
-        self.plugin_config_path.write_text(self.config.to_json())
-
-    def _load_project_config(self) -> None:
-        path = Path(self.board.get_project().path)
-        self.project_config_path = path / ".via-tools.json"
-        if self.project_config_path.exists():
-            config = ProjectConfig.from_json(self.project_config_path.read_text())
-            self.project_config.config_history = config.config_history
-
-    def save_project_config(self) -> None:
-        group_config = GroupConfig(deepcopy(self.config), self.group.id.value)
-        self.project_config.add_history_entry(
-            self.stitching_item.id.value, group_config
-        )
-        self.project_config_path.write_text(
-            self.project_config.to_json(encoder=lambda x: json.dumps(x, indent=2))
+        self.stitching_item = self._load_stitching_item()
+        self.netclass = self._load_netclass(self.stitching_item)
+        self.group = self._load_existing_group()
+        self.config = self.config_manager.get_config(
+            self.stitching_item.id.value, self.group and self.group.id.value
         )
 
-    def _load_zone(self) -> None:
+    def _load_stitching_item(self) -> Zone | Pad:
         selections = self.board.get_selection()
         if not selections:
             raise ValueError("Please select a zone, pad, or via stitching group.")
@@ -182,9 +164,9 @@ class ViaTools:
         selection = selections[0]
         match selection:
             case Zone() | Pad():
-                self.stitching_item = selection
+                return selection
             case Group(id=group_id, name=name):
-                zone_id = self.project_config.get_zone_by_group(group_id.value)
+                zone_id = self.config_manager.zone_from_group(group_id.value)
                 if not zone_id:
                     if name == "Via Stitching":
                         raise ValueError(
@@ -197,11 +179,11 @@ class ViaTools:
                     raise ValueError(
                         "Cannot find the zone/pad associated with this via group."
                     )
-                self.stitching_item = items[0]
+                return items[0]
             case _:
                 raise ValueError("Unknown item selected.")
 
-    def _load_netclass(self, item: Pad | Zone) -> None:
+    def _load_netclass(self, item: Pad | Zone) -> NetClass:
         if item.net is None:
             raise ValueError("Please assign a net to the selected item.")
 
@@ -211,18 +193,14 @@ class ViaTools:
                 f"Configure via diameter and hole size for netclass '{netclass.name}'."
             )
 
-        self.netclass = netclass
+        return netclass
 
-    def _load_existing_group(self) -> None:
+    def _load_existing_group(self) -> Group | None:
         groups = [
             g for g in self.board.get_groups() if g.name.startswith("Via Stitching")
         ]
-        known_group_ids = [
-            c.group_id
-            for configs in self.project_config.config_history.values()
-            for c in configs
-        ]
 
+        known_group_ids = self.config_manager.group_ids()
         for group in groups:
             if group.id.value not in known_group_ids:
                 self.board.clear_selection()
@@ -231,33 +209,9 @@ class ViaTools:
                     "Found orphaned via stitching group. Please delete it."
                 )
 
-        group_configs = self.project_config.config_history.get(
-            self.stitching_item.id.value, []
-        )
+        group_configs = self.config_manager.group_configs(self.stitching_item.id.value)
         group_ids = [config.group_id for config in group_configs]
-        self.group = next((g for g in groups if g.id.value in group_ids), None)
-
-    def _load_config(self) -> None:
-        zone_config_history = self.project_config.config_history.get(
-            self.stitching_item.id.value, []
-        )
-        config = None
-
-        if zone_config_history:
-            if self.group:
-                config = next(
-                    (
-                        group_config.config
-                        for group_config in zone_config_history
-                        if group_config.group_id == self.group.id.value
-                    ),
-                    None,
-                )
-            config = config or zone_config_history[0].config
-        else:
-            config = self.plugin_config
-
-        self.config = deepcopy(config)
+        return next((g for g in groups if g.id.value in group_ids), None)
 
     def netclass_via_settings(self) -> ViaSettings:
         return ViaSettings(
@@ -442,5 +396,6 @@ class ViaTools:
     def run(self) -> None:
         vias = self.place_vias()
         self.group = self.group_vias(vias)
-        self.save_plugin_config()
-        self.save_project_config()
+        self.config_manager.update_config(
+            self.config, self.stitching_item.id.value, self.group.id.value
+        )
