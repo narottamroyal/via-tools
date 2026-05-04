@@ -1,6 +1,5 @@
 import json
 import subprocess
-
 from importlib.metadata import version as metadata_version
 from io import BytesIO
 from pathlib import Path

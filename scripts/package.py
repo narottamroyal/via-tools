@@ -1,11 +1,10 @@
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 from contextlib import contextmanager
 from pathlib import Path
-from shutil import make_archive, copy2, rmtree
-
-from kipy.packaging.validate import validate
+from shutil import copy2, make_archive, rmtree
 
 from generate import icon, metadata, requirements, version
+from kipy.packaging.validate import validate
 
 
 def validate_plugin(path: Path):

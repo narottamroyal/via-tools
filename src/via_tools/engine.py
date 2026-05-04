@@ -1,7 +1,7 @@
 import math
-import shapely
-
 from pathlib import Path
+
+import shapely
 from kipy import KiCad
 from kipy.board_types import ArcTrack, Group, Pad, Track, Via, Zone
 from kipy.geometry import Box2, Vector2, normalize_angle_pi_radians
@@ -10,12 +10,7 @@ from kipy.proto.common.types.base_types_pb2 import KIID
 from kipy.util import units
 from shapely.geometry import LineString, Point, Polygon
 
-from .config import (
-    Config,
-    ConfigManager,
-    Pattern,
-    ViaSettings,
-)
+from .config import Config, ConfigManager, Pattern, ViaSettings
 
 
 def arc_angle(track: ArcTrack) -> float | None:

@@ -1,7 +1,7 @@
 def main() -> None:
     # Delay import to ensure package is added to path if necessary
-    from .gui import GUI
     from .engine import ViaTools
+    from .gui import GUI
 
     engine = ViaTools()
     app = GUI(engine)

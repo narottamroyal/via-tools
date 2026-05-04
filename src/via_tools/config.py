@@ -1,5 +1,4 @@
 import json
-
 from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum
@@ -7,7 +6,6 @@ from importlib.metadata import version
 from pathlib import Path
 
 from mashumaro.mixins.json import DataClassJSONMixin
-
 
 try:
     from ._version import __version__

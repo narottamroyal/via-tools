@@ -1,12 +1,12 @@
 import math
-import dearpygui.dearpygui as dpg
-
 from contextlib import contextmanager
+
+import dearpygui.dearpygui as dpg
 from kipy.geometry import Box2, Vector2
 from kipy.util import units
 
 from .config import Pattern
-from .engine import generate_positions, ViaTools
+from .engine import ViaTools, generate_positions
 
 
 class GUI:
