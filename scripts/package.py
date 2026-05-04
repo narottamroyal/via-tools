@@ -49,6 +49,7 @@ def generate(path: Path, zip: bool):
         plugins.mkdir()
         icon(plugins / "icon.ico")
         icon(plugins / "icon.png", 24)
+        icon(plugins / "icon_large.png", 32)
         requirements(plugins / "requirements.txt")
         copy2("resources/plugin.json", plugins)
         for path in Path("src/via_tools").rglob("*"):

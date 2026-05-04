@@ -15,7 +15,7 @@
       "show-button": true,
       "scopes": ["pcb"],
       "entrypoint": "via_tools/plugin.py",
-      "icons-light": ["icon.png"]
+      "icons-light": ["icon.png", "icon_large.png"]
     }
   ]
 }
