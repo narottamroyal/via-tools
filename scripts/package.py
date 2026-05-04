@@ -47,11 +47,6 @@ def generate(path: Path, zip: bool):
     with archive(path, zip) as root:
         plugins = root / "plugins"
         plugins.mkdir()
-        icon(plugins / "icon.ico")
-        icon(plugins / "icon.png", 24)
-        icon(plugins / "icon_large.png", 32)
-        requirements(plugins / "requirements.txt")
-        copy2("resources/plugin.json", plugins)
         for path in Path("src/via_tools").rglob("*"):
             if "__pycache__" in path.parts:
                 continue
@@ -60,6 +55,11 @@ def generate(path: Path, zip: bool):
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 copy2(path, dest)
         version(plugins / "via_tools/_version.py")
+        icon(plugins / "via_tools/icon.ico")
+        icon(plugins / "icon.png", 24)
+        icon(plugins / "icon_large.png", 32)
+        requirements(plugins / "requirements.txt")
+        copy2("resources/plugin.json", plugins)
 
         resources = root / "resources"
         resources.mkdir()
