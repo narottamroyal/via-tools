@@ -121,6 +121,8 @@ class ViaTools:
         self.board = self.kicad.get_board()
 
         self.config_manager = ConfigManager(
+            # TODO: Get plugin settings path directly once this fix is released:
+            # https://gitlab.com/kicad/code/kicad/-/merge_requests/2586
             plugin_path=Path(self.kicad.get_plugin_settings_path("a.a.a")).with_name(
                 "com.github.narottamroyal.via-tools"
             ),
@@ -371,6 +373,8 @@ class ViaTools:
         return vias
 
     def group_vias(self, vias: list[Via]) -> Group:
+        # TODO: Combine stitching and grouping into a single commit once this fix is released:
+        # https://gitlab.com/kicad/code/kicad/-/merge_requests/2592
         commit = self.board.begin_commit()
         group = Group()
         group.proto.name = "Via Stitching"
